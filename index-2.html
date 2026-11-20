@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Resultado encuestas Nexxo Home</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* VOICE: informe de investigación sobrio y cálido, como un dossier de seminario bien diagramado
+   IDEA: la ficha de resultados de un estudio de mercado, con pestañas como separadores de carpeta
+   PICTURE: gráficos de barras y rangos de precio Van Westendorp dibujados en HTML
+   COLOUR and TYPE: verde petróleo de la marca Nexxo, terracota de acento, arena de apoyo; Plus Jakarta Sans
+   LAYOUT: banda de encabezado con cifras clave, pestañas, secciones con tarjetas y tablas */
+:root{color-scheme:light dark;
+--bg:light-dark(#ffffff,#111917);--soft:light-dark(#f1f6f5,#18231f);--line:light-dark(#d9e3e1,#2a3a36);
+--ink:light-dark(#17201e,#e7efed);--mute:light-dark(#56635f,#9db0ab);
+--teal:light-dark(#2f5f5b,#7fbab2);--teal2:light-dark(#3d6b67,#5f9d95);--terra:light-dark(#a85c38,#e3906a);--sand:light-dark(#c4a484,#b7987a);
+--ok:light-dark(#2f7d55,#6fcf97);--warn:light-dark(#a8761d,#e5b95a);--bad:light-dark(#b0413e,#ef7d79);
+--head:#1F2B45;--headink:#f3f7f6}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 "Plus Jakarta Sans",system-ui,sans-serif;overflow-x:clip}
+.wrap{max-width:1240px;margin:0 auto}
+.band{padding:clamp(28px,4vw,56px) max(5vw,16px)}
+header.band{background:var(--head);color:var(--headink);padding-bottom:36px}
+.brand{display:flex;gap:16px;align-items:center;margin-bottom:22px}
+.logo{width:150px;height:auto;border-radius:12px;background:#f5f5f5;padding:8px;flex:none;display:block}
+h1{font-size:clamp(30px,4.4vw,48px);line-height:1.05;margin:0 0 10px;text-wrap:balance;font-weight:800}
+.sub{opacity:.85;margin:0;max-width:62ch}
+.kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:28px}
+.kpi{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:12px;padding:14px 16px}
+.kpi b{display:block;font-size:clamp(26px,3.4vw,38px);line-height:1.1}
+.kpi span{font-size:14px;opacity:.85}
+nav{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+nav .scroll{display:flex;gap:4px;padding:8px max(5vw,16px);max-width:1240px;margin:0 auto}
+nav a{flex:none;color:var(--mute);text-decoration:none;padding:10px 14px;border-radius:999px;font-weight:600;font-size:15px;min-height:44px;display:flex;align-items:center}
+nav a:hover{color:var(--ink);background:var(--soft)}
+nav a.on{background:var(--teal);color:var(--bg)}
+nav a:focus-visible,button:focus-visible{outline:3px solid var(--terra);outline-offset:2px}
+section.view{display:none}section.view.on{display:block}
+h2{font-size:32px;line-height:1.1;margin:0 0 8px;text-wrap:balance}
+h3{font-size:20px;margin:0 0 10px;line-height:1.25}
+.lead{color:var(--mute);max-width:70ch;margin:0 0 26px}
+.grid{display:grid;gap:16px}.g2{grid-template-columns:repeat(2,minmax(0,1fr))}.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.card{background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:20px}
+.stat b{font-size:clamp(30px,4vw,42px);line-height:1;color:var(--teal);display:block;margin:6px 0}
+.stat p{margin:0;font-size:15px}
+.tag{display:inline-block;font-size:13px;font-weight:700;padding:3px 10px;border-radius:999px;white-space:nowrap}
+.t-ok{background:color-mix(in srgb,var(--ok) 16%,transparent);color:var(--ok)}
+.t-warn{background:color-mix(in srgb,var(--warn) 18%,transparent);color:var(--warn)}
+.t-bad{background:color-mix(in srgb,var(--bad) 16%,transparent);color:var(--bad)}
+.t-sim{background:color-mix(in srgb,var(--terra) 16%,transparent);color:var(--terra)}
+.note{border-left:4px solid var(--terra);background:color-mix(in srgb,var(--terra) 8%,var(--bg));padding:16px 18px;border-radius:0 12px 12px 0;margin:22px 0}
+.note.teal{border-color:var(--teal);background:color-mix(in srgb,var(--teal) 8%,var(--bg))}
+.note p{margin:6px 0 0}
+.bars{display:grid;gap:12px}
+.bar .lbl{display:flex;justify-content:space-between;gap:10px;font-size:15px;margin-bottom:4px}
+.bar .lbl b{white-space:nowrap}
+.track{height:14px;background:color-mix(in srgb,var(--mute) 16%,transparent);border-radius:7px;overflow:hidden;position:relative}
+.fill{height:100%;border-radius:7px;background:var(--teal2);width:0;transition:width .8s ease}
+.fill.terra{background:var(--terra)}.fill.sand{background:var(--sand)}
+.thr{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--ink)}
+table{width:100%;border-collapse:collapse;font-size:15px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:13px;color:var(--mute);font-weight:700}
+td.n,th.n{text-align:right;white-space:nowrap}
+.scroll{overflow-x:auto}
+.vw{display:grid;gap:22px}
+.vrow h4{margin:0 0 6px;font-size:16px}
+.vtrack{position:relative;height:38px;background:color-mix(in srgb,var(--mute) 10%,transparent);border-radius:8px}
+.vrange{position:absolute;top:8px;bottom:8px;background:color-mix(in srgb,var(--teal2) 45%,transparent);border-radius:5px}
+.mk{position:absolute;top:2px;bottom:2px;width:4px;border-radius:2px;transform:translateX(-2px)}
+.mk.ev{background:var(--terra)}.mk.adj{background:var(--ink)}.mk.dmp{background:var(--teal);width:10px;height:10px;top:14px;border-radius:50%;transform:translateX(-5px)}
+.axis{position:relative;height:20px;font-size:13px;color:var(--mute)}
+.axis span{position:absolute;transform:translateX(-50%);white-space:nowrap}
+.legend{display:flex;flex-wrap:wrap;gap:16px;font-size:14px;color:var(--mute);margin-top:6px}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+blockquote{margin:0;padding:18px 20px;background:var(--soft);border-radius:14px;border:1px solid var(--line)}
+blockquote p{margin:0 0 10px;font-size:17px;font-weight:500}
+blockquote cite{font-style:normal;color:var(--mute);font-size:14px}
+.funnel{display:grid;gap:8px}
+.fstep{background:var(--teal);color:var(--bg);border-radius:10px;padding:12px 16px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-inline:auto}
+.fstep b{font-size:20px;white-space:nowrap}
+.fstep small{display:block;opacity:.85;font-size:14px}
+ol.q{margin:0;padding-left:1.4em}ol.q li{margin:6px 0}
+.qsec{font-size:13px;font-weight:700;color:var(--terra);margin:18px 0 4px}
+.formula{font-size:17px;font-weight:600;background:var(--bg);border:1px dashed var(--line);border-radius:10px;padding:12px 14px;overflow-x:auto;white-space:nowrap}
+.jm{position:relative;height:250px}.jm svg{position:absolute;inset:0;width:100%;height:100%}
+.jsteps{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;margin-top:10px;font-size:14px}
+.jsteps b{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--teal2);color:#fff;font-size:13px;margin-bottom:4px}
+.quad{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.quad .card{background:var(--bg)}
+.quad h4{margin:0 0 6px;font-size:17px}.quad ul{margin:0 0 8px;padding-left:1.1em;font-size:15px}.quad p{margin:0;font-size:15px}
+.axes{font-size:14px;color:var(--mute);margin:0 0 12px}
+.center{display:inline-block;background:var(--teal);color:var(--bg);border-radius:999px;padding:4px 12px;font-size:14px;font-weight:600;margin-bottom:12px}
+@media(max-width:700px){.jsteps{grid-template-columns:repeat(2,minmax(0,1fr))}.quad{grid-template-columns:minmax(0,1fr)}}
+.src{font-size:14px;color:var(--mute);margin:24px 0 0}
+.refs p{margin:0 0 14px;padding-left:2em;text-indent:-2em;font-size:15px}.refs a{color:var(--teal);overflow-wrap:anywhere}
+.mm-center{background:var(--teal);color:var(--bg);border:0}.mm-center h3{color:var(--bg)}
+#mm .card h4{margin:0 0 8px;font-size:17px;color:var(--terra)}#mm .card p{margin:0 0 6px;font-size:15px}
+.rings{display:grid;place-items:center;padding:8px 0}
+.ring{border-radius:50%;display:grid;place-items:center;position:relative;aspect-ratio:1}
+.ring.ind{width:min(100%,380px);background:color-mix(in srgb,var(--terra) 12%,transparent);border:2px solid var(--terra)}
+.ring.dir{width:72%;background:color-mix(in srgb,var(--teal2) 14%,transparent);border:2px solid var(--teal2)}
+.rl{position:absolute;top:7%;font-size:13px;font-weight:700}.ind>.rl{color:var(--terra)}.dir>.rl{color:var(--teal)}
+.core{width:52%;aspect-ratio:1;border-radius:50%;background:var(--bg);border:2px solid var(--ink);display:grid;place-content:center;text-align:center;font-weight:700;font-size:15px;padding:8px}.core small{display:block;font-weight:500;color:var(--mute);font-size:13px}
+ul.tight{margin:6px 0 0;padding-left:1.1em;font-size:15px}ul.tight li{margin:3px 0}
+.emp{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.emp .card{background:var(--bg)}.emp h4{margin:0 0 6px;font-size:16px}
+@media(max-width:860px){.emp{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:520px){.emp{grid-template-columns:minmax(0,1fr)}}
+.pit-group{margin-bottom:18px}.pit-group b{display:block;margin-bottom:8px;font-size:15px}
+.pits{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px}
+.pit{background:#fbd96a;color:#2b2410;padding:10px;font-size:14px;line-height:1.3;min-height:72px;box-shadow:0 2px 3px rgba(0,0,0,.18);border-radius:2px}
+.pit:nth-child(3n){background:#fde089}.pit:nth-child(4n){background:#f8d24f}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.chips span{background:var(--head);color:#fff;border-radius:999px;padding:6px 14px;font-size:15px;font-weight:600}
+#crit .card h4{margin:0 0 6px;font-size:17px}#crit .big{font-size:28px;font-weight:800;color:var(--teal);line-height:1.1}
+#np .card h4{margin:0 0 4px;font-size:18px}#np .card.win{border:2px solid var(--teal)}#np dl{margin:8px 0 0;font-size:15px}#np dt{font-weight:700;margin-top:8px;color:var(--terra)}#np dd{margin:2px 0 0}
+footer{background:var(--head);color:var(--headink);font-size:15px}
+footer p{margin:4px 0}
+.mt{margin-top:28px}
+@media(max-width:860px){.kpis,.g3{grid-template-columns:repeat(2,minmax(0,1fr))}.g2{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:520px){.kpis,.g3{grid-template-columns:minmax(0,1fr)}h2{font-size:26px}}
+@media(prefers-reduced-motion:reduce){.fill{transition:none}}
+html{scroll-padding-top:72px}
+@media(max-width:600px){table{font-size:13px}.stack thead{display:none}.stack tr{display:grid;padding-block:10px;border-bottom:1px solid var(--line)}.stack td{display:flow-root;border:0;padding:3px 0;padding-inline-start:8em;text-align:start}.stack td::before{content:attr(data-l);float:inline-start;width:7.5em;margin-inline-start:-8em;white-space:normal;color:var(--mute);font-weight:600}.stack td:empty{display:none}}
+</style>
+<script>new MutationObserver(()=>{for(const c of document.querySelectorAll('.stack td:not([data-l])')){let i=0,p=c;while(p=p.previousElementSibling)i+=p.colSpan;c.dataset.l=c.closest('table').rows[0].cells[i]?.textContent||''}}).observe(document,{childList:true,subtree:true})</script>
+</head>
+<body>
+
+<header class="band"><div class="wrap">
+  <div class="brand"><img class="logo" src="data:image/jpeg;base64,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" alt="Nexxo Home, residencia estudiantil"><div><span style="opacity:.85;font-size:14px">Seminario de Creación de Negocios · Universidad del Desarrollo · 2026</span></div></div>
+  <h1>Siete de cada diez estudiantes migrantes tuvieron problemas para adaptarse a Santiago</h1>
+  <p class="sub">Resultados de la investigación de campo de "Puertas Cerradas": encuesta exploratoria, entrevistas GEMBA, encuesta oficial de disposición a pagar y diseño del estudio cuantitativo.</p>
+  <div class="kpis">
+    <div class="kpi"><b>287</b><span>Post-its del mind map</span></div>
+    <div class="kpi"><b>386</b><span>Ideas en 15 sesiones de brainstorming</span></div>
+    <div class="kpi"><b>61</b><span>Entrevistas GEMBA</span></div>
+    <div class="kpi"><b>38</b><span>Encuesta exploratoria</span></div>
+    <div class="kpi"><b>400</b><span>Respuestas generadas (DAP)</span></div>
+    <div class="kpi"><b>349</b><span>Muestra diseñada en terreno</span></div>
+  </div>
+</div></header>
+
+<nav aria-label="Secciones"><div class="scroll" id="tabs">
+  <a href="#resumen">Resumen</a><a href="#exploratoria">Encuesta exploratoria</a><a href="#entrevistas">Entrevistas GEMBA</a><a href="#mapa">Mapa del problema</a><a href="#ideacion">Mind map y brainstorming</a><a href="#perfiles">Arquetipos y journey</a><a href="#simulacion">Disposición a pagar</a><a href="#hipotesis">Hipótesis</a><a href="#cuestionario">Cuestionarios</a><a href="#referencias">Referencias</a>
+</div></nav>
+
+<main class="wrap">
+
+<section class="view band" id="v-resumen">
+  <h2>Resumen general de resultados</h2>
+  <p class="lead">El problema no es solo encontrar una pieza: es llegar solo a una ciudad desconocida. La investigación se hizo en tres fases y sus resultados alimentan las hipótesis del negocio.</p>
+  <div class="grid g3">
+    <div class="card stat"><span class="tag t-bad">Crítico</span><b>68,4%</b><p>tuvo dificultades para adaptarse a la nueva ciudad</p></div>
+    <div class="card stat"><span class="tag t-bad">Alto</span><b>65,8%</b><p>buscó alojamiento en varias plataformas y contactos a la vez</p></div>
+    <div class="card stat"><span class="tag t-ok">Validado · H1</span><b>63,3%</b><p>dice que le habría ayudado vivir con personas en su misma situación</p></div>
+    <div class="card stat"><span class="tag t-bad">Alto</span><b>55%</b><p>sintió soledad o aislamiento lejos de su red de apoyo</p></div>
+    <div class="card stat"><span class="tag t-ok">Validado · H3</span><b>Sí</b><p>la familia co-decide y financia el alojamiento (entrevistas a 15 familias)</p></div>
+    <div class="card stat"><span class="tag t-sim">Estimación</span><b>22,2%</b><p>elegiría Nexxo Home y aceptaría su precio; define el SOM</p></div>
+  </div>
+  <div class="note teal"><b>Hallazgo estratégico principal</b>
+    <p>La soledad depende de si existe una estructura organizada de bienvenida. Los estudiantes de intercambio la tienen (grupos de WhatsApp, redes tipo Erasmus); los que llegan de regiones no. Ningún entrevistado recibió acompañamiento como parte de su arriendo: el factor central es la falta de red de apoyo, no el precio ni la ubicación.</p></div>
+  <div class="grid g2 mt">
+    <div class="card"><h3>Indicadores clave de la encuesta (n = 38)</h3><div class="bars" id="b-key"></div></div>
+    <div class="card"><h3>Personas consultadas por instrumento</h3><div class="bars" id="b-inst"></div>
+      <p style="font-size:14px;color:var(--mute);margin:14px 0 0">Las 400 respuestas de la encuesta oficial se generaron para probarla y la muestra de 349 aún no se aplica, por eso no se suman a las personas consultadas.</p></div>
+  </div>
+  <div class="card mt"><h3>Inventario de todo lo levantado en la tesis</h3>
+    <div class="scroll"><table class="stack"><thead><tr><th>Instrumento</th><th class="n">n</th><th>Dónde está</th><th>Estado</th></tr></thead><tbody id="t-inv"></tbody></table></div></div>
+  <p class="src"><i>Fuente:</i> Nexxo Home (2026a, 2026c, 2026e).</p>
+</section>
+
+<section class="view band" id="v-exploratoria">
+  <h2>Encuesta exploratoria a estudiantes migrantes</h2>
+  <p class="lead">Encuesta propia a 38 estudiantes que llegaron a estudiar desde otra región o país, para entender sus mayores dificultades al llegar y cómo los afectaron emocionalmente.</p>
+  <div class="grid g2">
+    <div class="card"><h3>Origen de los encuestados</h3><div class="bars" id="b-origen"></div></div>
+    <div class="card"><h3>Ficha técnica</h3>
+      <table class="stack"><thead><tr><th>Elemento</th><th>Detalle</th></tr></thead><tbody>
+        <tr><td>Muestra</td><td>38 estudiantes</td></tr>
+        <tr><td>Público</td><td>Estudiantes de regiones e intercambio</td></tr>
+        <tr><td>Margen de error</td><td>±15,9% al 95% de confianza</td></tr>
+        <tr><td>Uso</td><td>Validar el problema y orientar el diseño; no sirve para medir disposición a pagar</td></tr>
+      </tbody></table></div>
+  </div>
+  <div class="card mt"><h3>Resultados y la hipótesis que respaldan</h3>
+    <div class="scroll"><table class="stack"><thead><tr><th>Indicador</th><th class="n">Resultado</th><th>Hipótesis</th></tr></thead><tbody id="t-expl"></tbody></table></div></div>
+  <div class="note"><b>Ojo con las cifras del Informe 1</b><p>El Informe Parcial 1 atribuye el 65,8% a soledad y aislamiento. Desde el Informe 3 los datos quedaron así: 65,8% buscó en varias plataformas y 55% sintió soledad. Esta página usa la versión corregida.</p></div>
+  <p class="src"><i>Fuente:</i> Nexxo Home (2026a, 2026d, 2026f).</p>
+</section>
+
+<section class="view band" id="v-entrevistas">
+  <h2>Entrevistas GEMBA semiestructuradas</h2>
+  <p class="lead">61 entrevistas presenciales y por videollamada, de 10 a 15 minutos, con una pauta común de 10 ejes adaptada a estudiantes o familias.</p>
+  <div class="grid g3">
+    <div class="card stat"><b>25</b><p>estudiantes migrantes nacionales (regiones)</p></div>
+    <div class="card stat"><b>21</b><p>estudiantes extranjeros o de intercambio</p></div>
+    <div class="card stat"><b>15</b><p>familias, padres o apoderados</p></div>
+  </div>
+  <div class="grid g2 mt">
+    <div class="card"><h3>Lo que encontramos por perfil</h3>
+      <table class="stack"><thead><tr><th>Perfil</th><th>Hallazgo</th></tr></thead><tbody>
+        <tr><td>Intercambio</td><td>No reportaron soledad como tal gracias a grupos y actividades organizadas, pero les costó hacer amigos.</td></tr>
+        <tr><td>Regiones</td><td>Sí se sintieron solos las primeras semanas, con efecto explícito en su bienestar; no tienen una bienvenida equivalente.</td></tr>
+        <tr><td>Familias</td><td>Participan en la decisión y el financiamiento. Revisan contratos, garantías y seguridad, y quieren saber quién está detrás del arriendo.</td></tr>
+        <tr><td>Por origen</td><td>Necesidades y soledad similares entre nacionales y extranjeros: se definió una sola propuesta de valor (H4).</td></tr>
+      </tbody></table></div>
+    <div class="grid" style="align-content:start">
+      <blockquote><p>"A la segunda semana me sentía solo, con el tiempo afectó mi salud mental."</p><cite>Estudiante migrante nacional, Viña del Mar</cite></blockquote>
+      <blockquote><p>"Me sentí bastante solo, sobre todo en Santiago, sentía que todos ya tenían sus amigos por ser de Santiago."</p><cite>Estudiante migrante nacional, Punta Arenas</cite></blockquote>
+      <blockquote><p>"Igual hay un poco de soledad al estar lejos de familia y amigos."</p><cite>Estudiante extranjero, España</cite></blockquote>
+      <blockquote><p>"¿Quién está detrás de este arriendo? Quiero saber que mi hijo/a tiene apoyo."</p><cite>Familia, Coquimbo</cite></blockquote>
+    </div>
+  </div>
+  <div class="card mt"><h3>Dos actores en una misma decisión</h3>
+    <table class="stack"><thead><tr><th>Actor</th><th>Rol</th><th>Principales criterios</th></tr></thead><tbody>
+      <tr><td><b>Estudiante</b></td><td>Usuario final y participante de la decisión</td><td>Cercanía, ambiente, comunidad, comodidad, privacidad</td></tr>
+      <tr><td><b>Familia</b></td><td>Co-decisora y frecuentemente pagadora</td><td>Seguridad, precio, transparencia y confianza del alojamiento</td></tr>
+    </tbody></table>
+    <p style="margin:12px 0 0;font-size:15px">La decisión se concentra en dos ventanas al año: noviembre a febrero para el primer semestre y junio a julio para el segundo, una vez confirmada la admisión.</p></div>
+  <div class="note teal"><b>Caso Pedro Merino (25 años)</b><p>Su madre buscaba un buen sector y un arrendador de confianza, y aceptaron pagar algo más porque nada les daba tanta certeza. Al llegar se sintió solo y ese primer año afectó su salud mental. Las familias deciden más por referencias y por saber quién está detrás que por el precio más bajo.</p></div>
+  <p class="src"><i>Fuente:</i> Nexxo Home (2026c, 2026e, 2026f).</p>
+</section>
+
+<section class="view band" id="v-mapa">
+  <h2>Mapa del problema</h2>
+  <p class="lead">El mind map que ordena quién vive el problema, dónde, cuándo, por qué ocurre y cómo se percibe, junto con el mapa de stakeholders y los mapas de empatía levantados en el trabajo de campo.</p>
+  <div class="card mm-center"><h3>Usuario y problemática general</h3><p style="margin:0">Estudiantes migrantes, nacionales de regiones y extranjeros, que enfrentan dificultades para acceder a un alojamiento que combine seguridad, comunidad y acompañamiento, frente a una oferta de mercado centrada únicamente en el metro cuadrado y sin experiencia integral.</p></div>
+  <div class="grid g3 mt" id="mm"></div>
+  <div class="card mt"><h3>Mapa de stakeholders</h3>
+    <div class="rings"><div class="ring ind"><span class="rl">Indirectos</span><div class="ring dir"><span class="rl">Directos</span><div class="core">Estudiantes migrantes<small>Usuario</small></div></div></div></div>
+    <div class="grid g2 mt">
+      <div><b>Directos</b><ul class="tight"><li>Familia / padres</li><li>Universidades</li><li>Propietarios / residencias</li><li>Plataformas digitales, corredores e inmobiliarias</li><li>Otros estudiantes / roommates</li><li>Comercios y servicios locales</li></ul></div>
+      <div><b>Indirectos</b><ul class="tight"><li>Instituciones públicas</li><li>Comunidad / barrio</li></ul></div>
+    </div></div>
+  <div id="emp"></div>
+  <p class="src"><i>Fuente:</i> Nexxo Home (2026f).</p>
+</section>
+
+<section class="view band" id="v-ideacion">
+  <h2>Mind map y brainstorming</h2>
+  <p class="lead">Dos levantamientos colaborativos: un whiteboard de post-its con estudiantes, familias y colaboradores universitarios para construir el mind map, y 15 sesiones de brainstorming para generar y seleccionar ideas de solución.</p>
+  <div class="grid g3">
+    <div class="card stat"><b>287</b><p>post-its recolectados en el whiteboard del mind map</p></div>
+    <div class="card stat"><b>98</b><p>participantes: 68 estudiantes, 23 padres y familias, 7 colaboradores universitarios</p></div>
+    <div class="card stat"><b>386</b><p>ideas reunidas en 15 sesiones de brainstorming</p></div>
+  </div>
+
+  <h3 class="mt">1. Whiteboard del mind map (287 post-its)</h3>
+  <div class="grid g2">
+    <div class="card"><h4 style="margin:0 0 8px">Quiénes participaron</h4>
+      <div class="bars" id="b-pi"></div>
+      <p style="font-size:15px;margin:14px 0 0">Colaboradores: Dirección de Globalización UDD (Anysol Altermatt), embajadores globales UDD (Gino Pampaloni, Valentina Baeza y Gabriela Rodríguez), Centro de Apoyo al Desempeño Académico (CADA) y Vive UDD.</p></div>
+    <div class="card"><h4 style="margin:0 0 8px">Cómo se hizo</h4>
+      <ol class="q"><li>A cada grupo se le mostró un whiteboard con los principales aspectos del problema.</li><li>Cada participante escribió en post-its ideas, percepciones o información que le llamara la atención.</li><li>La información se procesó con la herramienta Meta-Rapp para sintetizar las ideas principales.</li><li>Los insights se organizaron en categorías y temas, se relacionaron entre sí y se construyó el mind map.</li></ol>
+      <div class="note teal" style="margin-bottom:0"><b>Resultado del mind map</b><p>El problema se concentra en cuatro puntos que se refuerzan entre sí: seguridad y confianza, adaptación, comunidad y falta de redes de apoyo. No basta con encontrar dónde vivir: se necesita una llegada segura, informada y acompañada.</p></div></div>
+  </div>
+  <div class="card mt"><h4 style="margin:0 0 4px">Muestra de post-its por tema</h4><p style="font-size:14px;color:var(--mute);margin:0 0 14px">Selección textual del whiteboard; el detalle completo de los 287 está en los anexos del informe final.</p><div id="pits"></div></div>
+
+  <h3 class="mt">2. Tabla de insights</h3>
+  <div class="scroll"><table class="stack"><thead><tr><th>Dimensión</th><th class="n">Dato</th><th>Insight</th></tr></thead><tbody id="t-ins"></tbody></table></div>
+
+  <h3 class="mt">3. Mapa de criterios de diseño</h3>
+  <div class="grid g3" id="crit"></div>
+  <div class="card mt"><b>Oportunidades agrupadas</b><div class="chips" id="chips"></div></div>
+
+  <h3 class="mt">4. Brainstorming (15 sesiones, 386 ideas)</h3>
+  <div class="grid g2">
+    <div class="card"><h4 style="margin:0 0 8px">Preguntas "¿Cómo podríamos…?"</h4><ol class="q" id="hmw"></ol></div>
+    <div class="card"><h4 style="margin:0 0 8px">Estructura de cada sesión</h4>
+      <ol class="q"><li><b>Generación individual:</b> cada participante propuso ideas sin importar cuán poco convencionales o viables fueran.</li><li><b>Conceptualización:</b> las ideas se agruparon y combinaron por afinidad en cuatro pilares.</li><li><b>Moderación y selección:</b> se compartieron las ideas y se eligieron las más relevantes en grupo.</li></ol>
+      <h4 style="margin:16px 0 8px">Criterios de selección</h4>
+      <ul class="tight"><li>Impacto en los insights (responde a un dato validado)</li><li>Diferenciación frente a la oferta existente</li><li>Factibilidad de implementación y operación</li><li>Confianza que genera en estudiantes y familias</li></ul></div>
+  </div>
+  <div class="card mt"><h4 style="margin:0 0 8px">Ideas seleccionadas por pilar</h4><div class="scroll"><table class="stack"><thead><tr><th>Pilar</th><th>Ideas seleccionadas</th></tr></thead><tbody id="t-pil"></tbody></table></div></div>
+
+  <h3 class="mt">5. De 386 ideas a 3 conceptos: comparativa Napkin Pitch</h3>
+  <div class="grid g3" id="np"></div>
+  <div class="note teal"><b>Concepto elegido: NEXXO Home</b><p>Es el único de los tres que integra alojamiento, información, acompañamiento y comunidad en una sola experiencia. La plataforma no resuelve por sí sola la soledad ni la comunidad, y el co-living depende de terceros y tiene espacios comunes limitados.</p></div>
+  <p class="src"><i>Fuente:</i> Nexxo Home (2026g).</p>
+</section>
+
+<section class="view band" id="v-perfiles">
+  <h2>Arquetipos y viaje del estudiante</h2>
+  <p class="lead">Del trabajo de campo salieron doce arquetipos (cuatro de estudiantes, cuatro de apoderados y cuatro de dueños de propiedad) y un journey map con los momentos críticos del viaje.</p>
+  <div class="card"><h3>Journey map: experiencia emocional del estudiante</h3>
+    <div class="jm" id="jm"></div>
+    <p style="font-size:14px;color:var(--mute);margin:10px 0 0">En la etapa 6 el camino se divide: sube si encuentra comunidad y apoyo, y sigue bajando si permanece aislado.</p></div>
+  <div class="card mt"><h3>Journey map por etapa del viaje</h3><div class="scroll"><table class="stack"><thead><tr><th>Dimensión</th><th>Antes del viaje</th><th>Durante el viaje</th><th>Después del viaje</th></tr></thead><tbody id="t-jm"></tbody></table></div></div>
+  <div id="arq"></div>
+  <p class="src"><i>Fuente:</i> Nexxo Home (2026f).</p>
+</section>
+
+<section class="view band" id="v-simulacion">
+  <h2>Encuesta oficial "Disposición a pagar"</h2>
+  <p class="lead">Antes de salir a terreno, la encuesta oficial (4 secciones, 16 preguntas, con Van Westendorp e intención de contratar) se probó con 400 respuestas generadas con supuestos explícitos y reproducibles, antes de aplicarla en terreno.</p>
+  <div class="grid g3">
+    <div class="card"><span class="tag t-ok">Diseñada</span><h3 style="margin-top:10px">El instrumento</h3><p style="margin:0">4 secciones y 16 preguntas. Mide modalidad preferida (P8), disposición máxima a pagar (P10), el bloque de Van Westendorp y la intención de contratar al precio de cada plan (P15).</p></div>
+    <div class="card"><span class="tag t-sim">Probada</span><h3 style="margin-top:10px">La prueba</h3><p style="margin:0">400 respuestas generadas para probar el cuestionario y anticipar resultados. Con esto se ajustaron los precios de Accesible y Estándar.</p></div>
+    <div class="card"><span class="tag t-warn">Pendiente</span><h3 style="margin-top:10px">La aplicación real</h3><p style="margin:0">349 encuestas a estudiantes UDD y UANDES de fuera de la RM. Validará H2.</p></div>
+  </div>
+  <h3 class="mt">Resultados de la prueba de la encuesta (n = 400)</h3>
+  <div class="note"><b>Antes de la aplicación en terreno</b><p>Estos resultados se actualizarán con la aplicación real (H2). La prueba evaluó el arriendo mensual de cada plan.</p></div>
+  <div class="grid g2">
+    <div class="card"><h3>Modalidad preferida (n = 400)</h3><div class="bars" id="b-modal"></div></div>
+    <div class="card"><h3>Intención de contratar al precio evaluado</h3><div class="bars" id="b-int"></div>
+      <div class="legend"><span><i style="background:var(--ink);width:3px"></i>Umbral H2: 30%</span></div></div>
+  </div>
+  <div class="card mt"><h3>Rango aceptable de Van Westendorp por plan</h3>
+    <div class="vw" id="vw"></div>
+    <div class="legend"><span><i style="background:color-mix(in srgb,var(--teal2) 45%,transparent)"></i>Rango aceptable</span><span><i style="background:var(--teal);border-radius:50%"></i>Mediana DMP</span><span><i style="background:var(--terra)"></i>Precio evaluado</span><span><i style="background:var(--ink)"></i>Precio ajustado (arriendo)</span></div>
+  </div>
+  <div class="card mt"><h3>Detalle por plan</h3><div class="scroll"><table class="stack"><thead><tr><th>Plan (n)</th><th class="n">Precio evaluado</th><th class="n">Mediana DMP</th><th class="n">Acepta el precio</th><th class="n">Intención</th><th class="n">Rango aceptable</th></tr></thead><tbody id="t-dap"></tbody></table></div>
+    <p style="font-size:14px;color:var(--mute);margin:10px 0 0">DMP: disposición máxima a pagar.</p></div>
+  <div class="grid g2 mt">
+    <div class="card"><h3>Aceptación antes y después del ajuste</h3><div class="bars" id="b-adj"></div>
+      <div class="legend"><span><i style="background:var(--sand)"></i>Precio inicial</span><span><i style="background:var(--teal2)"></i>Precio ajustado</span></div></div>
+    <div class="card"><h3>Precios finales por plan</h3>
+      <table><thead><tr><th>Plan</th><th class="n">Arriendo mensual</th></tr></thead><tbody>
+        <tr><td>Accesible</td><td class="n">$480.000</td></tr>
+        <tr><td>Estándar</td><td class="n">$590.000</td></tr>
+        <tr><td>Premium</td><td class="n">$728.000</td></tr>
+      </tbody></table>
+      <p style="font-size:15px;margin:12px 0 0">Premium se mantuvo como ancla boutique: queda solo 3% sobre la mediana de DMP.</p></div>
+  </div>
+  <div class="note teal"><b>Segmento de mayor afinidad</b><p>Familias con presupuesto de $600.000 o más: el 73,5% acepta el precio y el 61,4% contrataría.</p></div>
+  
+  <p class="src"><i>Fuente:</i> Nexxo Home (2026b, 2026e). Método de sensibilidad al precio: Van Westendorp (1976).</p>
+</section>
+
+
+
+<section class="view band" id="v-hipotesis">
+  <h2>Validación de hipótesis</h2>
+  <p class="lead">Diez hipótesis del modelo de negocio, cada una con método, métrica y umbral (versión del Informe Parcial 4).</p>
+  <div class="grid g3" id="h-sum"></div>
+  <div class="card mt"><div class="scroll"><table class="stack"><thead><tr><th>N.°</th><th>Tipo</th><th>Hipótesis</th><th>Método</th><th>Umbral</th><th>Estado</th></tr></thead><tbody id="t-hip"></tbody></table></div></div>
+  <div class="card mt"><h3>Pruebas del prototipo</h3>
+    <table class="stack"><thead><tr><th>Prueba</th><th>Qué pasó</th><th>Estado</th></tr></thead><tbody>
+      <tr><td>App del residente (maqueta navegable)</td><td>Pasó por varias rondas de feedback antes de la versión final: reserva, tour virtual, portal, servicios y portal de apoderados.</td><td><span class="tag t-ok">Realizada</span></td></tr>
+      <tr><td>Tour virtual con precio total</td><td>Falló en la primera prueba y se corrigió; hoy muestra 13 imágenes reales y el precio total visible.</td><td><span class="tag t-ok">Corregida</span></td></tr>
+      <tr><td>Reserva a distancia sin visita</td><td>Se medirá con el % de reservas cerradas a distancia en la preventa (meta ≥ 50%).</td><td><span class="tag t-warn">Pendiente</span></td></tr>
+    </tbody></table></div>
+  <div class="note"><b>Cambio en H4</b><p>En el Informe 3, H4 planteaba que se necesitaban propuestas distintas por origen y quedó rechazada. En el Informe 4 se reformuló como "sin diferencias relevantes" y figura validada como pivote: una sola propuesta de valor.</p></div>
+  <p class="src"><i>Fuente:</i> Nexxo Home (2026d, 2026e).</p>
+</section>
+
+<section class="view band" id="v-cuestionario">
+  <h2>Cuestionarios aplicados y diseñados</h2>
+  <p class="lead">Instrumentos de levantamiento usados en la tesis.</p>
+  <div class="grid g2">
+    <div class="card"><h3>Cuestionario del estudio cuantitativo (18 preguntas, unos 6 minutos)</h3>
+      <div class="qsec">Perfil</div><ol class="q" start="1">
+        <li>¿En qué universidad estudias? (UDD / UANDES / otra)</li><li>¿En qué región o país vivías antes de entrar a la universidad?</li><li>¿En qué año de tu carrera estás?</li><li>¿Dónde vives actualmente? (familiares, pieza, departamento, residencia, otro)</li></ol>
+      <div class="qsec">Búsqueda y decisión</div><ol class="q" start="5">
+        <li>¿Qué tan difícil fue encontrar alojamiento al llegar a Santiago? (1–5)</li><li>¿Cuáles fueron tus principales problemas al buscar alojamiento? (selección múltiple)</li><li>¿Quién paga tu alojamiento? (yo, mis padres, beca, compartido)</li><li>¿Quién participa en la decisión de dónde vives?</li><li>Ordena de 1 a 6: precio, ubicación, seguridad, comunidad, servicios incluidos y espacios comunes.</li><li>¿Cuánto tiempo máximo estarías dispuesto(a) a demorarte en llegar a tu universidad?</li></ol>
+      <div class="qsec">Propuesta y precio (Van Westendorp)</div><ol class="q" start="11">
+        <li>Se muestran renders y descripción de Nexxo Home. ¿Qué te parece la propuesta? (1–5)</li><li>¿A qué precio mensual sería tan barato que dudarías de su calidad?</li><li>¿A qué precio sería una buena compra?</li><li>¿A qué precio empezaría a parecerte caro, pero aún lo pagarías?</li><li>¿A qué precio sería tan caro que no lo considerarías?</li><li>¿Qué tan probable es que vivieras en Nexxo Home al precio de cada plan + 12% de servicios? (1–5)</li></ol>
+      <div class="qsec">Comunidad y canales</div><ol class="q" start="17">
+        <li>¿Qué tan importante sería para ti participar en actividades de integración? (1–5)</li><li>¿Dónde buscarías alojamiento? (universidad, Instagram/TikTok, plataformas, recomendación, otro)</li></ol>
+      <p style="font-size:14px;color:var(--mute);margin:14px 0 0">Versión del Informe 3. En el Informe 4 se condensó en la encuesta oficial "Disposición a pagar" de 4 secciones y 16 preguntas, con modalidad preferida (P8), disposición máxima a pagar (P10), bloque Van Westendorp e intención por plan (P15).</p></div>
+    <div class="grid" style="align-content:start">
+      <div class="card"><h3>Pauta de entrevista GEMBA (10 ejes)</h3><ol class="q">
+        <li>Proceso de búsqueda de alojamiento</li><li>Momento más difícil vivido</li><li>Canales utilizados</li><li>Quién tomó la decisión final y qué pesó más</li><li>Problemas con el arriendo o contrato</li><li>Experiencia de integración social</li><li>Qué cambiaría del proceso</li><li>Precio pagado</li><li>Disposición a compartir gastos o vivir en residencia</li><li>Qué necesitaría para sentirse en una comunidad y no solo arrendando una pieza</li></ol></div>
+      <div class="card"><h3>Medición futura en operación</h3>
+        <table class="stack"><thead><tr><th>Instrumento</th><th>Mide</th></tr></thead><tbody>
+          <tr><td>Encuesta semestral de satisfacción</td><td>Satisfacción top-2 ≥ 80% (H7)</td></tr>
+          <tr><td>Registro de renovaciones</td><td>Renovación ≥ 70% (H7)</td></tr>
+          <tr><td>Entrevista de salida</td><td>Motivos de no renovación en el check-out</td></tr>
+        </tbody></table></div>
+    </div>
+  </div>
+  <p class="src"><i>Fuente:</i> Nexxo Home (2026c, 2026d, 2026e).</p>
+</section>
+<section class="view band" id="v-referencias">
+  <h2>Referencias</h2>
+  <p class="lead">Formato APA, 7.ª edición. Las fuentes propias del equipo se citan como Nexxo Home (2026a–g).</p>
+  <div class="card refs"><p>Nexxo Home. (2026a). <i>Encuesta exploratoria a estudiantes migrantes</i> [Datos sin publicar]. Seminario de Creación de Negocios, Universidad del Desarrollo.</p><p>Nexxo Home. (2026b). <i>Encuesta oficial “Disposición a pagar”</i> [Instrumento y datos sin publicar]. Seminario de Creación de Negocios, Universidad del Desarrollo.</p><p>Nexxo Home. (2026c). <i>Entrevistas GEMBA a estudiantes migrantes y familias</i> [Datos sin publicar]. Seminario de Creación de Negocios, Universidad del Desarrollo.</p><p>Nexxo Home. (2026d). <i>Nexxo Home: Informe parcial N.° 3</i> [Informe no publicado]. Seminario de Creación de Negocios, Universidad del Desarrollo.</p><p>Nexxo Home. (2026e). <i>Nexxo Home: Informe parcial N.° 4</i> [Informe no publicado]. Seminario de Creación de Negocios, Universidad del Desarrollo.</p><p>Nexxo Home. (2026g). <i>Nexxo Home: Informe final</i> [Informe no publicado]. Seminario de Creación de Negocios, Universidad del Desarrollo.</p><p>Nexxo Home. (2026f). <i>Puertas cerradas: El desafío del migrante para estudiar en una ciudad desconocida</i> [Informe parcial N.° 1, no publicado]. Seminario de Creación de Negocios, Universidad del Desarrollo.</p><p>Van Westendorp, P. H. (1976). NSS-Price Sensitivity Meter (PSM): A new approach to study consumer perception of prices. En <i>Proceedings of the 29th ESOMAR Congress</i> (pp. 139–167). ESOMAR.</p></div>
+</section>
+</main>
+
+<footer class="band"><div class="wrap">
+  <p><b>Nexxo Home</b> · "Más que un lugar, una nueva etapa"</p>
+  <p>Seminario de Creación de Negocios, Universidad del Desarrollo, 2026 · Profesor: Ángel Sevil · Ayudante: Natalia González</p>
+  <p>Equipo: Benjamín Aedo, Benjamín Urtubia, Benjamín Wood, Catalina Jara, Sofía Oyarzún, Erandi Agudo, Joaquín Correa</p>
+  <p style="opacity:.75;font-size:14px;margin-top:10px">Fuentes en formato APA 7 en la sección Referencias.</p>
+</div></footer>
+
+<script>
+{
+const $=id=>document.getElementById(id);
+const pct=v=>v.toLocaleString('es-CL',{maximumFractionDigits:1})+'%';
+const bars=(id,rows,max=100,thr)=>{$(id).innerHTML=rows.map(r=>`<div class="bar"><div class="lbl"><span>${r[0]}</span><b>${r.fmt||pct(r[1])}</b></div><div class="track"><div class="fill ${r[2]||''}" data-w="${r[1]/max*100}"></div>${thr?`<div class="thr" style="left:${thr/max*100}%"></div>`:''}</div></div>`).join('')};
+
+bars('b-key',[['Dificultad para adaptarse',68.4],['Buscó en varias plataformas',65.8],['Le habría ayudado vivir con pares',63.3],['Sintió soledad o aislamiento',55,'terra']]);
+const inst=[['Whiteboard del mind map',98],['Entrevistas GEMBA',61],['Encuesta exploratoria',38]];
+bars('b-inst',inst.map(r=>Object.assign([r[0],r[1],''],{fmt:r[1]+' personas'})),98);
+bars('b-origen',[['Otras regiones de Chile',73.7],['Extranjero',26.3,'terra']]);
+$('t-expl').innerHTML=[
+ ['Tuvo dificultades para adaptarse a la nueva ciudad','68,4%','H1'],
+ ['Buscó alojamiento en múltiples plataformas y contactos','65,8%','Evidencia de fricción en la reserva a distancia'],
+ ['Le habría ayudado estar con personas en su misma situación','63,3%','H1 validada'],
+ ['Sintió soledad o aislamiento lejos de su red de apoyo','55%','H1'],
+ ['Proviene de otras regiones / del extranjero','73,7% / 26,3%','Perfil de la muestra']
+].map(r=>`<tr><td>${r[0]}</td><td class="n"><b>${r[1]}</b></td><td>${r[2]}</td></tr>`).join('');
+
+bars('b-modal',[['Estándar',38.5],['Premium',34.5,'terra'],['Accesible',27]],40);
+bars('b-int',[['Accesible',21.4,'terra'],['Estándar',38.3],['Premium',48.5]],60,30);
+
+const plans=[
+ {p:'Accesible',n:42,ev:537.6,adj:480,dmp:390,lo:240,hi:405,acc:14.3,int:21.4,acc2:33.5},
+ {p:'Estándar',n:154,ev:627.2,adj:590,dmp:500,lo:320,hi:505,acc:23.4,int:38.3,acc2:29.0},
+ {p:'Premium',n:66,ev:728,adj:728,dmp:705,lo:450,hi:715,acc:45.5,int:48.5,acc2:45.5}];
+const mn=200,mx=850,x=v=>(v-mn)/(mx-mn)*100,clp=v=>'$'+Math.round(v*1000).toLocaleString('es-CL');
+$('vw').innerHTML=plans.map(d=>`<div class="vrow"><h4>${d.p}</h4><div class="vtrack" role="img" aria-label="${d.p}: rango ${clp(d.lo)} a ${clp(d.hi)}, mediana ${clp(d.dmp)}, precio evaluado ${clp(d.ev)}">
+ <div class="vrange" style="left:${x(d.lo)}%;width:${x(d.hi)-x(d.lo)}%"></div>
+ <div class="mk dmp" style="left:${x(d.dmp)}%"></div><div class="mk ev" style="left:${x(d.ev)}%"></div>${d.adj!==d.ev?`<div class="mk adj" style="left:${x(d.adj)}%"></div>`:''}</div></div>`).join('')
+ +`<div class="axis">${[200,300,400,500,600,700,800].map(v=>`<span style="left:${x(v)}%">$${v} mil</span>`).join('')}</div>`;
+$('t-dap').innerHTML=plans.map(d=>`<tr><td>${d.p} (${d.n})</td><td class="n">${clp(d.ev)}</td><td class="n">${clp(d.dmp)}</td><td class="n">${pct(d.acc)}</td><td class="n">${pct(d.int)}</td><td class="n">$${d.lo}–${d.hi} mil</td></tr>`).join('');
+$('b-adj').innerHTML=plans.map(d=>`<div class="bar"><div class="lbl"><span>${d.p}</span><b>${pct(d.acc)} → ${pct(d.acc2)}</b></div><div class="track" style="height:9px;margin-bottom:4px"><div class="fill sand" data-w="${d.acc/50*100}"></div></div><div class="track" style="height:9px"><div class="fill" data-w="${d.acc2/50*100}"></div></div></div>`).join('');
+
+
+const H=[
+ ['H1','Value','El estudiante preferirá una residencia que integre alojamiento y acompañamiento.','Encuesta exploratoria y GEMBA','≥ 60% valora vivir con pares','ok','Validada (63,3%)'],
+ ['H2','Value','El precio de cada plan queda en el rango aceptable y la intención supera el umbral.','Encuesta oficial: Van Westendorp + intención','Intención top-2 ≥ 30% por plan','warn','Pendiente (encuesta probada)'],
+ ['H3','Value','La familia co-decide y paga; necesita un portal para apoderados.','Entrevistas a familias','Mayoría de familias','ok','Validada'],
+ ['H4','Value','Las necesidades no cambian según origen nacional o extranjero.','GEMBA por origen','Sin diferencias relevantes','ok','Validada (pivote)'],
+ ['H5','Execution','El EBITDA es positivo con hasta 80% de ocupación.','Modelo financiero','≤ 29 de 36 camas','bad','No validada: requiere 38 camas (44 de 72 con nueva sede)'],
+ ['H6','Execution','Los residentes conocen y usan al anfitrión.','Operación del primer semestre','≥ 80%','warn','Pendiente'],
+ ['H7','Execution','Los residentes quedan satisfechos y renuevan.','Encuesta de satisfacción y renovaciones','≥ 80% satisfacción; ≥ 70% renovación','warn','Pendiente'],
+ ['H8','Scale','Los convenios con UDD y UANDES generan contratos.','Registro de contratos por canal','≥ 30% vía convenios','warn','Pendiente'],
+ ['H9','Scale','El modelo llena su capacidad y puede crecer.','Tablero de KPIs','Ocupación ≥ 90% dos semestres; lista de espera > 0; CLTV/CAC ≥ 3x','warn','Pendiente'],
+ ['H10','Defensibility','Integrar espacio, plataforma digital y acompañamiento es difícil de copiar.','Benchmark: LivinnX, Rumi, University Residence Chile','0 competidores con las 3 capas','ok','Validada']];
+$('t-hip').innerHTML=H.map(h=>`<tr><td><b>${h[0]}</b></td><td>${h[1]}</td><td>${h[2]}</td><td>${h[3]}</td><td>${h[4]}</td><td><span class="tag t-${h[5]}" style="white-space:normal">${h[6]}</span></td></tr>`).join('');
+const c=k=>H.filter(h=>h[5]===k).length;
+$('h-sum').innerHTML=[['ok','Validadas'],['warn','Pendientes'],['bad','No validadas']].map(s=>`<div class="card stat"><span class="tag t-${s[0]}">${s[1]}</span><b>${c(s[0])}</b><p>de 10 hipótesis</p></div>`).join('');
+
+$('t-inv').innerHTML=[
+ ['Encuesta exploratoria a estudiantes migrantes','38','Informe 1, ago 2026','ok','Aplicada'],
+ ['Entrevistas GEMBA semiestructuradas (25 nacionales, 21 extranjeros, 15 familias)','61','Informe 1','ok','Aplicadas'],
+ ['Whiteboard de post-its para el mind map (68 estudiantes, 23 familias, 7 colaboradores)','287','Informe final, nov 2026','ok','Aplicado'],
+ ['Sesiones de brainstorming (15)','386','Informe final','ok','Realizadas: 386 ideas'],
+ ['Tabla de insights, mapa de criterios de diseño y Napkin Pitch','—','Informe final','ok','Elaborados'],
+ ['Mapa de stakeholders y mapas de empatía','—','Informe 1','ok','Elaborados con el trabajo de campo'],
+ ['Journey map y 12 arquetipos','—','Informe 1','ok','Elaborados con el trabajo de campo'],
+ ['Test de usabilidad del prototipo (app y tour virtual)','—','Informe 3, oct 2026','ok','Realizado; tour corregido'],
+ ['Cuestionario del estudio cuantitativo (18 preguntas)','349','Informe 3','warn','Diseñado; reemplazado por la encuesta oficial'],
+ ['Encuesta oficial "Disposición a pagar" (4 secciones, 16 preguntas)','400','Informe 4, nov 2026','sim','Probada con 400 respuestas generadas'],
+ ['Aplicación en terreno de la encuesta oficial','349','Informe 4','warn','Pendiente (H2)'],
+ ['Validación previa del cuestionario','10','Informe 3','warn','Planificada (semana 1)'],
+ ['Encuesta semestral de satisfacción y entrevista de salida','—','Informe 4','warn','Diseñadas para la operación (H7)']
+].map(r=>`<tr><td>${r[0]}</td><td class="n">${r[1]}</td><td>${r[2]}</td><td><span class="tag t-${r[3]}" style="white-space:normal">${r[4]}</span></td></tr>`).join('');
+
+const J=['Decide estudiar en una ciudad desconocida y deja su red de apoyo','Busca alojamiento a distancia; compara precio, ubicación y seguridad','Evalúa y reserva sin poder verificar bien el lugar ni al arrendador','Viaja con incertidumbre y sin orientación clara sobre su llegada','Se instala lejos de su familia; enfrenta soledad y falta de redes','Inicia su adaptación: ¿encuentra comunidad, apoyo y pertenencia?'];
+const jv=[.6,0,-.35,-.45,-.7];
+$('jm').insertAdjacentHTML('afterend',`<div class="jsteps">${J.map((t,i)=>`<div><b>${i+1}</b><br>${t}</div>`).join('')}</div>`);
+const jmEl=$('jm');
+const drawJ=()=>{const W=jmEl.clientWidth,H=jmEl.clientHeight,pad=24,mid=H/2,sx=i=>pad+16+i*(W-2*pad-32)/5,sy=v=>mid-v*(H/2-pad);
+ const pts=jv.map((v,i)=>[sx(i),sy(v)]);
+ const dot=(p,n,c)=>`<circle cx="${p[0]}" cy="${p[1]}" r="14" fill="${c}"/><text x="${p[0]}" y="${p[1]+5}" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">${n}</text>`;
+ const up=[sx(5),sy(.65)],dn=[sx(5),sy(-1.05)];
+ jmEl.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Curva emocional: parte positiva, baja hasta la etapa 5 y en la 6 sube o baja según si encuentra comunidad">
+ <rect x="0" y="0" width="${W}" height="${H}" rx="12" style="fill:var(--soft)"/>
+ <line x1="0" x2="${W}" y1="${mid}" y2="${mid}" style="stroke:var(--mute)" stroke-width="1.5"/>
+ <text x="12" y="20" font-size="13" style="fill:var(--mute)">Experiencia positiva</text><text x="12" y="${H-10}" font-size="13" style="fill:var(--mute)">Experiencia negativa</text>
+ <polyline points="${pts.map(p=>p.join(',')).join(' ')}" fill="none" style="stroke:var(--teal)" stroke-width="2.5"/>
+ <line x1="${pts[4][0]}" y1="${pts[4][1]}" x2="${up[0]}" y2="${up[1]}" style="stroke:var(--teal)" stroke-width="2" stroke-dasharray="6 5"/>
+ <line x1="${pts[4][0]}" y1="${pts[4][1]}" x2="${dn[0]}" y2="${dn[1]}" style="stroke:var(--terra)" stroke-width="2" stroke-dasharray="6 5"/>
+ ${pts.map((p,i)=>dot(p,i+1,'var(--teal2)')).join('')}${dot(up,6,'var(--teal2)')}${dot(dn,6,'var(--terra)')}
+ ${W>520?`<text x="${up[0]-20}" y="${up[1]+5}" text-anchor="end" font-size="13" style="fill:var(--ink)">con comunidad</text><text x="${dn[0]-20}" y="${dn[1]+5}" text-anchor="end" font-size="13" style="fill:var(--ink)">aislado</text>`:''}</svg>`};
+const roJ=new ResizeObserver(drawJ);roJ.observe(jmEl);
+
+$('t-jm').innerHTML=[
+ ['Acciones','Busca alojamiento, compara precios y ubicaciones, contacta arrendadores','Viaja, confirma su alojamiento y organiza su llegada','Se instala, conoce su entorno e intenta integrarse'],
+ ['Puntos de contacto','Plataformas de arriendo, redes sociales, familia y arrendadores','Transporte, mapas, teléfono y arrendador','Alojamiento, universidad, barrio y otros estudiantes'],
+ ['Pensamientos','¿Será seguro y confiable? ¿Me alcanzará el presupuesto?','¿El alojamiento será real? ¿Cómo llegaré?','¿Podré adaptarme? ¿Conoceré a alguien?'],
+ ['Emociones','Entusiasmo, incertidumbre y desconfianza','Ansiedad, inseguridad y preocupación','Alivio si encuentra apoyo; soledad y frustración si sigue aislado'],
+ ['Insights','Buscar a distancia dificulta verificar precio, seguridad y confiabilidad','La falta de orientación aumenta la incertidumbre del traslado','Una vivienda no basta: se necesita comunidad, apoyo y acompañamiento']
+].map(r=>`<tr><td><b>${r[0]}</b></td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td></tr>`).join('');
+
+const A=[
+ ['Estudiante migrante','Origen migratorio × experiencia previa viviendo fuera de casa','65,8% sintió soledad al llegar (cifra del Informe 1)',[
+  ['Migrante nacional novato',['De otra región de Chile','Primera vez lejos de la familia','Sin red de apoyo en Santiago'],'acompañamiento y comunidad, no solo una pieza'],
+  ['Migrante internacional novato',['Extranjero o de intercambio','Primera experiencia de independencia','Barreras de idioma, cultura y mercado local'],'seguridad, verificación y comunidad desde el día uno'],
+  ['Migrante nacional con experiencia',['Ya vivió fuera de casa','Quiere resolver rápido y sin fricción'],'un proceso de arriendo ágil y confiable'],
+  ['Migrante internacional con experiencia',['Ya vivió fuera de su país','Domina la vida independiente, no el mercado chileno','Prioriza eficiencia sobre acompañamiento'],'confianza y transparencia en la transacción']]],
+ ['Apoderados','Cercanía a la ciudad de destino × involucramiento en la decisión','Seguridad, bienestar y costo: preocupación de todos',[
+  ['Apoderado nacional involucrado',['Familia en otra región','Puede viajar a conocer la ciudad','Quiere validar barrio y propiedad'],'poder visitar o validar antes de decidir'],
+  ['Apoderado internacional protector',['Familia en el extranjero','No puede visitar en persona','Máxima preocupación por fraude y seguridad'],'verificación remota confiable y contacto constante'],
+  ['Apoderado nacional confiado',['Familia en otra región','Confía en la autonomía de su hijo/a'],'una garantía simple y verificable de que el lugar es seguro'],
+  ['Apoderado internacional a distancia',['Familia en el extranjero','Deja la decisión al hijo/a','No puede verificar en persona'],'evidencia verificable a distancia (fotos reales, respaldo institucional)']]],
+ ['Dueños de propiedad','Escala del propietario × involucramiento operativo deseado','Certeza de pago y bajo riesgo',[
+  ['Inversionista institucional',['Fondo u operador inmobiliario','Busca rentabilidad vía terceros','Evalúa el nicho estudiantil'],'evidencia de que el nicho es rentable y escalable'],
+  ['Propietario pasivo',['Dueño que no quiere gestionar','Busca ingresos estables sin complicaciones'],'renta garantizada y cero gestión operativa'],
+  ['Operador profesional activo',['Administra varias propiedades','Podría competir o aliarse'],'diferenciarse con valor agregado o asociarse'],
+  ['Propietario tradicional',['Arrienda su casa o depto. por su cuenta','Teme perder el control'],'selección y protección legal frente a daños o impagos']]]];
+$('arq').innerHTML=A.map(g=>`<div class="card mt"><h3>Arquetipos: ${g[0]}</h3><p class="axes">${g[1]}</p><span class="center">${g[2]}</span>
+ <div class="quad">${g[3].map(q=>`<div class="card"><h4>${q[0]}</h4><ul>${q[1].map(l=>`<li>${l}</li>`).join('')}</ul><p><b>Necesita:</b> ${q[2]}</p></div>`).join('')}</div></div>`).join('');
+
+const MM=[
+ ['¿Quién vive la problemática?',['<b>Dimensión humana:</b> estudiantes migrantes, nacionales de regiones y extranjeros, que buscan alojamiento por primera vez lejos de su núcleo familiar.','<b>Dimensión institucional:</b> familias que financian y participan en la decisión, universidades que orientan y actores del mercado (arrendadores, inmobiliarias) que intermedian sin acompañamiento.']],
+ ['¿Qué vivencian?',['<b>El estudiante:</b> incertidumbre durante la búsqueda, riesgo de fraude o desinformación y presión de tiempo por el inicio del año académico.','<b>La familia:</b> preocupación por la seguridad del lugar y desconfianza al participar en la decisión a distancia.']],
+ ['¿Dónde se vive? (contexto)',['<b>Físico:</b> departamentos, piezas y residencias arrendadas en comunas universitarias de Santiago (Providencia, Ñuñoa, Estación Central, entre otras).','<b>Psicológico:</b> en la búsqueda a distancia antes de llegar y en la soledad de las primeras semanas lejos de la red familiar.']],
+ ['¿Cuándo se vive?',['<b>En las personas:</b> durante la matrícula y el inicio de clases, y de forma prolongada en las primeras semanas de instalación.','<b>De forma recurrente:</b> en cada ciclo académico, año a año con cada nueva generación de estudiantes migrantes.']],
+ ['¿Por qué está ocurriendo?',['Oferta de alojamiento concentrada en resolver el espacio físico, sin acompañamiento a la adaptación social ni emocional.','Crecimiento sostenido de la matrícula migrante, regional y extranjera, sin una oferta especializada que integre seguridad, transparencia y comunidad.']],
+ ['¿Cómo lo perciben?',['<b>Impacto emocional:</b> ansiedad, soledad y aislamiento que pueden afectar el bienestar y el desempeño académico.','<b>Impacto práctico:</b> desconfianza en el arriendo, decisiones apresuradas por falta de tiempo y exposición a fraude o abuso contractual.']]];
+$('mm').innerHTML=MM.map(m=>`<div class="card"><h4>${m[0]}</h4>${m[1].map(t=>`<p>${t}</p>`).join('')}</div>`).join('');
+const EMP=[['Estudiante migrante',[
+ ['¿Qué piensa y siente?',['Encontrar un lugar seguro que pueda pagar','Le preocupa vivir lejos de su familia y red de apoyo','Incertidumbre al llegar a una ciudad desconocida','Valora comodidad, seguridad y conectividad','Quiere adaptarse rápido y sentirse acompañado']],
+ ['¿Qué oye?',['Recomendaciones de familia y amigos','Advertencias sobre fraudes y malas experiencias','Consejos sobre barrios, transporte y seguridad','Experiencias de otros estudiantes','Orientación de la universidad']],
+ ['¿Qué ve?',['Muchas opciones con información dispersa','Precios altos y diferencias entre comunas','Barrios que no conoce bien','Estudiantes que ya tienen redes de apoyo','Alternativas centradas solo en la habitación']],
+ ['¿Qué dice y hace?',['Busca en plataformas, redes y recomendaciones','Compara precios, ubicación y servicios','Pide referencias a conocidos y familiares','Evalúa seguridad, distancia y conectividad','Intenta elegir una opción confiable y conveniente']],
+ ['Esfuerzos',['Riesgo de fraude o desconfianza','Falta de información clara','Presión de tiempo para decidir','Soledad y dificultad de adaptación']],
+ ['Resultados',['Alojamiento seguro y confiable','Buena ubicación y conectividad','Integración y sentido de comunidad','Apoyo para adaptarse a la nueva ciudad']]]],
+ ['Padres / familia',[
+ ['¿Qué piensan y sienten?',['Piensan en la seguridad y bienestar del estudiante','Les preocupa que viva solo o lejos de casa','Incertidumbre frente al mercado de arriendo','Quieren confiar en la opción elegida','Buscan tranquilidad durante toda la estadía']],
+ ['¿Qué oyen?',['Recomendaciones de conocidos y otros apoderados','Noticias sobre fraudes y problemas de arriendo','Opiniones sobre barrios y seguridad','Información de universidades y plataformas','Experiencias previas de otros estudiantes']],
+ ['¿Qué ven?',['Un mercado complejo y precios elevados','Alternativas difíciles de comparar','Riesgos al arrendar a distancia','Que el estudiante necesita apoyo para adaptarse','Diferencias entre comunas y condiciones']],
+ ['¿Qué dicen y hacen?',['Investigan y comparan alternativas','Participan en la decisión del alojamiento','Revisan precios, contratos y condiciones','Buscan referencias y validan la confiabilidad','Apoyan económica y emocionalmente al estudiante']],
+ ['Esfuerzos',['Dificultad para verificar información','Preocupación por seguridad y costos','Miedo a fraudes o malas experiencias','Distancia para acompañar presencialmente']],
+ ['Resultados',['Transparencia en precios y condiciones','Alojamiento seguro y confiable','Tranquilidad para la familia','Apoyo y acompañamiento para el estudiante']]]]];
+$('emp').innerHTML=EMP.map(e=>`<div class="card mt"><h3>Mapa de empatía: ${e[0]}</h3><div class="emp">${e[1].map(b=>`<div class="card"><h4>${b[0]}</h4><ul class="tight">${b[1].map(l=>`<li>${l}</li>`).join('')}</ul></div>`).join('')}</div></div>`).join('');
+
+bars('b-pi',[['Estudiantes',68],['Padres y familias',23,'terra'],['Colaboradores universitarios',7,'sand']].map(r=>Object.assign(r,{fmt:r[1]+' personas'})),68);
+const PIT=[
+ ['Seguridad y confianza',['Barrios evitados por mala fama','Dormir en un lugar seguro la primera noche','Desconfianza en arrendadores desconocidos','¿Quién está detrás de este arriendo?','Depósitos pedidos antes de ver la pieza','Fotos que no coinciden con la realidad','No poder visitar antes de llegar','Sello de alojamiento verificado','Publicaciones falsas en redes sociales','Contrato digital claro']],
+ ['Costos y pagos',['Arriendos muy caros para un estudiante','Precio total todo incluido','Gastos comunes que no estaban en el precio','Piden garantía y mes de adelanto','Piden aval o codeudor chileno','Planes semestrales con descuento','¿Cuánto es un precio justo?','Precio bajo puede ser una estafa','Depende del dinero que envía la familia','¿Pagarían más por seguridad y compañía?']],
+ ['Vivienda e información',['No hay un lugar único con todos los datos','Reserva y contrato en un solo lugar','Necesidad de un lugar para estudiar en silencio','Anuncios sin precio ni condiciones claras','Difícil comparar opciones','Un hogar, no solo una pieza','Información dispersa entre redes y contactos','Contratos por meses que no calzan con el semestre']],
+ ['Adaptación a la ciudad',['Plataforma con guía de la ciudad','Recorrido guiado del barrio','Kit de bienvenida con transporte y SIM','Chat con un gestor antes de llegar','Difícil moverse sin conocer la ciudad','Rutas de buses confusas','Comunidad digital de residentes','El idioma como barrera para extranjeros']],
+ ['Emociones',['Soledad las primeras semanas','Sentirse acompañado cambia todo','Ansiedad al no tener dónde vivir','Alivio al encontrar un lugar confiable','Un espacio cálido baja la ansiedad','Vergüenza de pedir ayuda','Miedo a decepcionar a la familia','Alegría al hacer el primer amigo']],
+ ['Redes de apoyo',['Extrañar a la familia y al hogar','Falta de un adulto de confianza en la ciudad','Anfitrión residente como punto de contacto','Programa de bienvenida en la primera semana','Mentor que conozca la ciudad','¿A quién llamo si me enfermo?','Apoyo psicológico accesible','Quienes tenían red previa se adaptaron mejor']],
+ ['Voces de estudiantes',['Miedo a que me rechacen por mi nacionalidad','No sé qué preguntarle al arrendador','Decidir sin ver la pieza','Me asusta firmar algo que no entiendo','Quiero comparar pieza, mapa y precio en un solo lugar','Necesito llegar con el primer mes resuelto']],
+ ['Voces de familias',['Queremos conocer a quien aloja a nuestro hijo','No sabemos si el barrio es seguro','Queremos fotos y videos reales de la pieza','Queremos un contacto local de confianza','Nos tranquiliza que haya otros estudiantes de nuestro país','Queremos que no se sienta solo']],
+ ['Arrendadores e instituciones',['Arrendador teme impagos de extranjeros','No saben cómo verificar documentos extranjeros','No hay seguimiento después de la llegada','Faltan convenios con residencias','La universidad orienta poco sobre alojamiento','Devolución de garantía incierta','Tour virtual antes de decidir','Checklist de preparación antes de viajar']]];
+$('pits').innerHTML=PIT.map(g=>`<div class="pit-group"><b>${g[0]}</b><div class="pits">${g[1].map(t=>`<div class="pit">${t}</div>`).join('')}</div></div>`).join('');
+$('t-ins').innerHTML=[
+ ['Seguridad y confianza','—','La confianza reduce la incertidumbre y hace que la llegada a una ciudad nueva sea menos vulnerable: importa confiar en las personas, las recomendaciones y el entorno, no solo en lo físico.'],
+ ['Adaptación a la ciudad','68,4%','La adaptación es un proceso desigual; entregar información y apoyo desde el inicio facilita la integración.'],
+ ['Información y fragmentación','65,8%','No falta información: está dispersa entre redes, plataformas y contactos, y eso impide comparar y decidir con seguridad.'],
+ ['Comunidad y privacidad','63,3%','No basta con crear comunidad: hay que equilibrar pertenencia, interacción y espacio personal, porque unos buscan compañía y otros independencia.'],
+ ['Bienestar lejos de las redes de apoyo','55%','El impacto depende de cada estudiante, pero combinado con falta de vínculos o problemas de alojamiento afecta su bienestar y su experiencia académica.']
+].map(r=>`<tr><td><b>${r[0]}</b></td><td class="n"><b>${r[1]}</b></td><td>${r[2]}</td></tr>`).join('');
+const CR=[['Seguridad y confianza al llegar','',['Verificación y reseñas confiables de arrendadores y compañeros','Sello de "espacio verificado" en cada publicación','Se valoran referencias, recomendaciones y espacios seguros']],
+ ['Información fragmentada','65,8%',['Plataforma única que centralice oferta, precios y condiciones','Filtros y comparador para no saltar entre fuentes']],
+ ['Adaptación a la ciudad','68,4%',['Guía de barrio integrada: transporte, servicios y seguridad desde el primer día']],
+ ['Comunidad y privacidad','63,3%',['Match de compañeros por afinidad y estilo de convivencia','Privacidad ajustable: más o menos interacción según preferencia']],
+ ['Bienestar lejos de las redes de apoyo','55%',['Comunidad de apoyo estudiantil conectada desde antes de llegar a la ciudad']]];
+$('crit').innerHTML=CR.map(c=>`<div class="card"><h4>${c[0]}</h4>${c[1]?`<div class="big">${c[1]}</div>`:''}<ul class="tight">${c[2].map(l=>`<li>${l}</li>`).join('')}</ul></div>`).join('');
+$('chips').innerHTML=['Plataforma digital','Comunidad y conexión','Apoyo estudiantil','Ecosistema estudiantil','Bienestar individual'].map(t=>`<span>${t}</span>`).join('');
+$('hmw').innerHTML=[['Seguridad y confianza','¿Cómo podríamos lograr que el estudiante y su familia confíen en el lugar donde vivirá antes de llegar?'],['Adaptación a la ciudad','¿Cómo podríamos lograr que las primeras semanas en una ciudad desconocida no se vivan a ciegas?'],['Comunidad y privacidad','¿Cómo podríamos dar compañía a quien la busca sin invadir a quien prefiere independencia?'],['Bienestar lejos de las redes de apoyo','¿Cómo podríamos hacer que el lugar se sienta como un hogar y no solo como una pieza arrendada?']].map(q=>`<li><b>${q[0]}:</b> ${q[1]}</li>`).join('');
+$('t-pil').innerHTML=[['Espacio físico (hogar boutique)','Habitaciones privadas, espacios comunes (sala de estudio silenciosa, cocina-comedor, lounge, terraza), sala de bienestar, control de acceso, ambiente cálido con luz natural y materiales nobles'],['Plataforma digital','Información única con precio total y condiciones, tour virtual verificado, reserva y contrato digital transparente, checklist y guía previa a la llegada, portal para apoderados, canal de soporte'],['Acompañamiento','Anfitrión residente, mentor estudiante veterano, kit y recorrido de bienvenida, orientación en trámites para extranjeros, actividades comunitarias opcionales, convenio de apoyo psicológico'],['Ecosistema','Alianzas con universidades, convenios con comercios y servicios cercanos, conectividad y transporte, red de exresidentes, pack para estudiantes de intercambio']].map(r=>`<tr><td><b>${r[0]}</b></td><td>${r[1]}</td></tr>`).join('');
+$('np').innerHTML=[
+ ['NEXXO Home','Residencia estudiantil boutique',true,'Residencia de escala pequeña y diseño cálido que integra alojamiento, información, acompañamiento y comunidad en una sola experiencia.','El estudiante llega a un lugar verificado, con bienvenida y red de pares; la familia tiene transparencia y sabe quién está detrás.','Mensualidad recurrente por habitación y convenios con universidades. Riesgo: inversión inicial y permisos.'],
+ ['Student Connect','Plataforma verificada de alojamiento',false,'Plataforma que reúne alojamientos verificados con precio total, tour virtual, contrato transparente, kit digital de llegada y un gestor local.','Toda la información en un solo lugar y sin estafas. No resuelve por sí sola la soledad ni la comunidad.','Comisión por reserva y suscripción de propietarios; bajo capital y alta escalabilidad. Riesgo: depende de la oferta de terceros.'],
+ ['Co-living en casas','Red de casas compartidas',false,'Casas o departamentos arrendados y acondicionados para grupos pequeños, con compañeros seleccionados por perfil, un anfitrión y actividades comunes.','Vive acompañado a menor costo y con un primer círculo social; la familia tiene un responsable y reglas claras.','Mensualidad por cupo con margen sobre el arriendo. Riesgo: depende de propietarios y de la convivencia; espacios comunes limitados.']
+].map(n=>`<div class="card${n[2]?' win':''}">${n[2]?'<span class="tag t-ok">Elegida</span>':''}<h4 style="margin-top:8px">${n[0]}</h4><p style="margin:0;color:var(--mute);font-size:15px">${n[1]}</p><dl><dt>Big idea</dt><dd>${n[3]}</dd><dt>Beneficios</dt><dd>${n[4]}</dd><dt>Modelo y riesgo</dt><dd>${n[5]}</dd></dl></div>`).join('');
+
+const views=['resumen','exploratoria','entrevistas','mapa','ideacion','perfiles','simulacion','hipotesis','cuestionario','referencias'];
+let cur='resumen';
+try{const hv=location.hash.slice(1);if(views.includes(hv))cur=hv}catch(e){}
+const show=v=>{if(!views.includes(v))v='resumen';cur=v;
+ views.forEach(n=>$('v-'+n).classList.toggle('on',n===v));
+ document.querySelectorAll('#tabs a').forEach(a=>{const on=a.dataset.v===v;a.classList.toggle('on',on);if(on)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});
+ requestAnimationFrame(()=>document.querySelectorAll('#v-'+v+' .fill').forEach(f=>f.style.width=f.dataset.w+'%'));
+ if(v==='perfiles')requestAnimationFrame(drawJ);};
+document.querySelectorAll('#tabs a').forEach(a=>{a.dataset.v=a.getAttribute('href').slice(1);
+ a.addEventListener('click',e=>{e.preventDefault();show(a.dataset.v);
+  try{history.replaceState(null,'','#'+a.dataset.v)}catch(err){}
+  const n=document.querySelector('nav');if(n.getBoundingClientRect().top<=0)window.scrollTo(0,n.offsetTop);});});
+addEventListener('hashchange',()=>{try{const hv=location.hash.slice(1);if(views.includes(hv)&&hv!==cur)show(hv)}catch(e){}});
+show(cur);
+}
+</script>
+</body>
+</html>
